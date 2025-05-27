@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 20px; }
+        .module { margin-bottom: 20px; }
+        .resources a { color: #2980b9; text-decoration: none; font-size: 12px; display: block; }
+    </style>
+</head>
+<body>
+    <h1>{{ roadmap.title }}</h1>
+    <p><strong>Duration:</strong> {{ roadmap.duration }}</p>
+    <p><strong>Learning Style:</strong> {{ roadmap.learning_style }}</p>
+
+    <h2>Modules</h2>
+    {% for module in roadmap.modules %}
+    <div class="module">
+        <p><strong>{{ module.week }}</strong> — {{ module.topic }} ({{ module.time }})</p>
+        <p><strong>Resources:</strong></p>
+        {% for link in module.resources %}
+            <a href="{{ link }}">{{ link }}</a>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</body>
+</html>
