@@ -13,7 +13,7 @@ def analyze_prompt(user_prompt):
     3. learning intent (e.g., learning, improving, mastering)
     4. learning style (e.g., hands-on, theoretical, project-based)
     5.proficiency level (e.g., beginner, intermediate, advanced)
-    Return a pytgon dictionary with the following keys
+    Return a python dictionary with the following keys
 """ 
     full_prompt = system_prompt + "\n\nUser Prompt: " + user_prompt
 
