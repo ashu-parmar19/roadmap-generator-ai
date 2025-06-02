@@ -12,16 +12,17 @@ model = genai.GenerativeModel(model_name="gemini-2.0-flash")
 
 def extract_json(text):
     try:
-        match = re.search(r'\{.*?\}', text, re.DOTALL)
-        if match:
-            return json.loads(match.group())
-        else:
-            raise ValueError("No JSON-like structure found in the text.")
+        start = text.find('{')
+        end = text.rfind('}') + 1
+        cleaned = text[start:end]
+        return json.loads(cleaned)
     except Exception as e:
         return {
-            "error": "Failed to parse the response",
-            "details": str(e)
+            "error": "Failed to parse JSON",
+            "details": str(e),
+            "raw_output": text
         }
+
 
 def analyze_prompt(user_prompt):
     system_prompt = """
@@ -50,14 +51,33 @@ IMPORTANT:
 
     response = model.generate_content(full_prompt)
     return extract_json(response.text)
+
+
+    # Fallback/default
+    result = {
+        "skills": {},
+        "intent": "",
+        "style": "",
+        "proficiency": "",
+        "timeframe": ""
+    }
+
+    if isinstance(data, dict):
+        for key in result:
+            result[key] = data.get(key, result[key])
+
+        # Ensure subskills are valid lists
+        for skill in list(result["skills"].keys()):
+            subskills = result["skills"][skill]
+            if not isinstance(subskills, list):
+                result["skills"][skill] = []
+    else:
+        result["error"] = "Model did not return valid structured output"
+
+    return result
     
     
 
 
-result = analyze_prompt("I want to learn Python programming for data analysis. I prefer hands-on projects and I'm a beginner. in about 3 months")
-print(result)
 
-
-for m in genai.list_models():
-    print(m.name, m.supported_generation_methods)
 
